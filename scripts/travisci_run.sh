@@ -12,11 +12,8 @@ ant
 ./bin/buck build buck || { cat buck-out/log/ant.log; exit 1; }
 
 # There are only two cores in the containers, but Buck thinks there are 12
-# and tries to use all of them.  As a result, we seem to have our test
-# processes killed if we do not limit our threads.
-export BUCK_NUM_THREADS=3
-
-if [ "$CI_ACTION" = "build" ]; then
+# and tries to use al
+export BUCK_NUM_THREADS=3f [ "$CI_ACTION" = "build" ]; then
   # Make sure that everything builds in case a library is not covered by a test.
   ./bin/buck build --num-threads=$BUCK_NUM_THREADS src/... test/...
 fi
@@ -31,10 +28,7 @@ fi
 
 if [ "$CI_ACTION" = "heavy_integration" ]; then
   ./bin/buck build --num-threads=$BUCK_NUM_THREADS //test/com/facebook/buck/android/... //test/com/facebook/buck/jvm/java/...
-  
-  # To avoid fail with "No output has been received in the last 10m" we run this with travis_wait.
-  # See https://docs.travis-ci.com/user/common-build-problems/#Build-times-out-because-no-output-was-received
-  travis_wait 30 ./bin/buck test  --num-threads=1 //test/com/facebook/buck/android/... //test/com/facebook/buck/jvm/java/... --filter '.*[Ii]ntegration.*'
+  ./bin/buck test  --num-threads=1 //test/com/facebook/buck/android/... //test/com/facebook/buck/jvm/java/... --filter '.*[Ii]ntegration.*'
 fi
 
 if [ "$CI_ACTION" = "ant" ]; then
