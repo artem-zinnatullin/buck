@@ -31,7 +31,10 @@ fi
 
 if [ "$CI_ACTION" = "heavy_integration" ]; then
   ./bin/buck build --num-threads=$BUCK_NUM_THREADS //test/com/facebook/buck/android/... //test/com/facebook/buck/jvm/java/...
-  ./bin/buck test  --num-threads=1 //test/com/facebook/buck/android/... //test/com/facebook/buck/jvm/java/... --filter '.*[Ii]ntegration.*'
+  
+  # To avoid fail with "No output has been received in the last 10m" we run this with travis_wait.
+  # See https://docs.travis-ci.com/user/common-build-problems/#Build-times-out-because-no-output-was-received
+  travis_wait 30 ./bin/buck test  --num-threads=1 //test/com/facebook/buck/android/... //test/com/facebook/buck/jvm/java/... --filter '.*[Ii]ntegration.*'
 fi
 
 if [ "$CI_ACTION" = "ant" ]; then
