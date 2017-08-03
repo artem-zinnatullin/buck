@@ -12,8 +12,8 @@ env:
 # TODO(ttsugrii): upgrade to trusty once all deps are fixed
 dist: precise
 
-# Enable container-based architecture.
-sudo: false
+# Disable container-based architecture to get more RAM.
+sudo: required
 
 addons:
   apt:
