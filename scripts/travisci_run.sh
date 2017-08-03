@@ -12,8 +12,11 @@ ant
 ./bin/buck build buck || { cat buck-out/log/ant.log; exit 1; }
 
 # There are only two cores in the containers, but Buck thinks there are 12
-# and tries to use al
-export BUCK_NUM_THREADS=3f [ "$CI_ACTION" = "build" ]; then
+# and tries to use all of them.  As a result, we seem to have our test
+# processes killed if we do not limit our threads.
+export BUCK_NUM_THREADS=3
+
+if [ "$CI_ACTION" = "build" ]; then
   # Make sure that everything builds in case a library is not covered by a test.
   ./bin/buck build --num-threads=$BUCK_NUM_THREADS src/... test/...
 fi
